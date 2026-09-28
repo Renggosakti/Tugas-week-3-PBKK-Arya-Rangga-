@@ -1,59 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tugas 4: Aplikasi Multi-View Profil Akademik
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mini-website akademik pribadi berbentuk dashboard, dibangun dengan **Laravel 12**, **Blade**, **Tailwind CSS**, dan **Vite**. Berisi profil diri, rancangan platform Agentic AI kelompok (**Cakra AI**), dan formulir pengumpulan ide.
 
-## About Laravel
+## Identitas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| | |
+|---|---|
+| Nama | Arya Rangga Putra Pratama |
+| NRP | 5025241072 |
+| Program Studi | S1 Teknik Informatika |
+| Kampus | Institut Teknologi Sepuluh Nopember (ITS) |
+| Tugas | Pertemuan 4, Implementasi Layout & Komponen |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Dashboard dengan sidebar kiri** yang bisa dibuka-tutup (pilihan diingat di browser).
+- **Beranda**: perkenalan diri, pengenalan Departemen Teknik Informatika ITS, statistik, dan tech stack.
+- **Profil**: foto, identitas, bahasa pemrograman, aplikasi/tools, dan pengalaman.
+- **Ide-Riset**: ilustrasi orbit arsitektur Cakra AI, kemampuan platform, roadmap, form ide, dan papan ide.
+- **Efek visual**: latar gradient bergerak, cahaya mengikuti kursor, ripple saat klik, transisi antar halaman, dan animasi kartu.
+- **Responsif**: tampilan menyesuaikan layar desktop dan HP.
 
-## Learning Laravel
+## Pemenuhan Spesifikasi Tugas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Ketentuan | Implementasi |
+|---|---|
+| Master layout terpusat | `resources/views/layouts/app.blade.php` (title dinamis, sidebar/navbar, container konten, footer ITS) |
+| Tanpa duplikasi HTML | Semua halaman hanya memakai `@extends('layouts.app')` dan `@section` |
+| 3 halaman anak | Beranda `/`, Profil `/profil-mahasiswa`, Ide-Riset `/ide-agent` |
+| Satu controller | `app/Http/Controllers/PageController.php` |
+| Komponen `<x-info-card>` | `resources/views/components/info-card.blade.php` (props `title`, `icon`, slot) |
+| Komponen `<x-status-banner>` | `resources/views/components/status-banner.blade.php` (prop `type`, slot) |
+| Vite + NPM, tanpa CDN | Tailwind CSS v4 dan font lewat NPM, dikompilasi lokal (`vite.config.js`) |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Tantangan Ekstra
 
-## Laravel Sponsors
+1. **Toggle tema dinamis**: `/ide-agent?mode=dark` mengubah tema lewat variabel Blade (`$dark`, `$bodyClass`) yang menghasilkan class Tailwind berbeda. Mode terbawa saat berpindah halaman.
+2. **Alert status interaktif**: `/beranda?user=Andi` (atau `/?user=Andi`) menampilkan `<x-status-banner>` berisi pesan selamat datang sesuai nama di URL.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Rute
 
-### Premium Partners
+| Method | URL | Keterangan |
+|---|---|---|
+| GET | `/` dan `/beranda` | Beranda (mendukung `?user=Nama`) |
+| GET | `/profil-mahasiswa` | Profil mahasiswa |
+| GET | `/ide-agent` | Ide-Riset (mendukung `?mode=dark`) |
+| POST | `/ide-agent` | Kirim ide (disimpan di session) |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Struktur File Utama
 
-## Contributing
+```
+app/Http/Controllers/PageController.php
+resources/
+├── css/app.css
+├── js/app.js
+└── views/
+    ├── layouts/app.blade.php
+    ├── components/
+    │   ├── info-card.blade.php
+    │   └── status-banner.blade.php
+    ├── beranda.blade.php
+    ├── profil.blade.php
+    └── ide.blade.php
+routes/web.php
+vite.config.js
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Cara Menjalankan
 
-## Code of Conduct
+Prasyarat: PHP 8.2+, Composer, Node.js (LTS).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone https://github.com/Renggosakti/Tugas-week-3-PBKK-Arya-Rangga-.git
+cd Tugas-week-3-PBKK-Arya-Rangga-
 
-## Security Vulnerabilities
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+npm install
+```
 
-## License
+Jalankan di dua terminal:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+```
+```bash
+npm run dev
+```
+
+Buka `http://127.0.0.1:8000`.
+
+Contoh URL untuk mencoba tantangan:
+
+- `http://127.0.0.1:8000/ide-agent?mode=dark`
+- `http://127.0.0.1:8000/beranda?user=Andi`
+
+> Untuk menampilkan foto di halaman Profil, simpan foto sebagai `public/images/foto.jpg`.
+
+## Teknologi
+
+Laravel 12, Blade Components, Tailwind CSS v4, Vite, `@fontsource-variable/plus-jakarta-sans`.
+
+## Catatan
+
+Foto, persentase skill, dan isi pengalaman pada halaman Profil serta roadmap Cakra AI bersifat contoh dan dapat disesuaikan.
