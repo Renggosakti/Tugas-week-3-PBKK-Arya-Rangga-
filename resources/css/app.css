@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+@source "../views/**/*.blade.php";
+
+@theme {
+    --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+    --color-its-50: #eaf4ff;
+    --color-its-100: #d3e8ff;
+    --color-its-300: #6fb4f5;
+    --color-its-500: #1c7fd6;
+    --color-its-600: #0b5cad;
+    --color-its-800: #08346b;
+    --color-its-950: #051a38;
+}
+
+/* ---------- Latar belakang animasi ---------- */
+.bg-stage { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.blob { position: absolute; border-radius: 9999px; filter: blur(80px); opacity: .55; animation: drift 18s ease-in-out infinite alternate; }
+.blob.a { width: 34rem; height: 34rem; background: #6fb4f5; top: -10rem; left: 12rem; }
+.blob.b { width: 28rem; height: 28rem; background: #1c7fd6; bottom: -8rem; right: -6rem; animation-duration: 24s; }
+.blob.c { width: 20rem; height: 20rem; background: #b8dcff; top: 40%; left: 45%; animation-duration: 30s; }
+[data-mode="dark"] .blob { opacity: .35; }
+[data-mode="dark"] .blob.c { background: #0b5cad; }
+.grid-lines {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(11,92,173,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(11,92,173,.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), #000 0, transparent 55%);
+}
+.spotlight {
+    position: absolute; inset: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(28,127,214,.18), transparent 70%);
+}
+@keyframes drift { to { transform: translate(60px, 40px) scale(1.15); } }
+
+/* ---------- Panel kaca ---------- */
+.glass {
+    background: rgba(255,255,255,.66);
+    border: 1px solid rgba(255,255,255,.9);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px -12px rgba(8,52,107,.25);
+}
+[data-mode="dark"] .glass {
+    background: rgba(15,32,64,.55);
+    border-color: rgba(111,180,245,.18);
+    box-shadow: 0 10px 30px -12px rgba(0,0,0,.6);
+}
+.lift { transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.lift:hover { transform: translateY(-4px); box-shadow: 0 18px 36px -14px rgba(11,92,173,.45); }
+
+/* ---------- Transisi halaman + reveal ---------- */
+main.page { animation: page-in .55s cubic-bezier(.2,.8,.2,1) both; }
+body.leaving main.page { animation: page-out .25s ease-in forwards; }
+main.page .reveal { animation: page-in .6s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 90ms + 120ms); }
+@keyframes page-in { from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); } }
+@keyframes page-out { to { opacity: 0; transform: translateY(-10px) scale(.99); filter: blur(4px); } }
+
+/* ---------- Ripple klik ---------- */
+.ripple {
+    position: fixed; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9999px;
+    border: 2px solid #1c7fd6; pointer-events: none; z-index: 60; animation: ripple .7s ease-out forwards;
+}
+@keyframes ripple { to { transform: scale(18); opacity: 0; } }
+
+/* ---------- Alur agent ---------- */
+.flow-line { stroke-dasharray: 6 6; animation: dash 1s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -12; } }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Tambahan v2 ---------- */
+.marquee { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+.marquee:hover { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.node { cursor: pointer; transition: transform .25s, box-shadow .25s, background .25s; }
+.node.on { transform: translateY(-4px) scale(1.04); box-shadow: 0 0 0 3px #6fb4f5, 0 18px 34px -12px rgba(28,127,214,.7); }
+.text-shine { background: linear-gradient(90deg,#0b5cad,#1c7fd6,#6fb4f5,#0b5cad); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+[data-mode="dark"] .text-shine { background-image: linear-gradient(90deg,#d3e8ff,#6fb4f5,#1c7fd6,#d3e8ff); background-size: 200% auto; }
+@keyframes shine { to { background-position: 200% center; } }
+
+/* ---------- v3: sidebar collapse, bar skill, timeline ---------- */
+.bar { height: .55rem; border-radius: 9999px; background: rgba(28,127,214,.15); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg,#0b5cad,#6fb4f5); animation: fill 1.3s .4s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes fill { to { width: var(--w); } }
+.tl { position: relative; }
+.tl::before { content: ""; position: absolute; left: .42rem; top: .5rem; bottom: .5rem; width: 2px; background: linear-gradient(#1c7fd6, transparent); }
+#sidebar { transition: transform .3s, width .3s; }
+@media (min-width: 1024px) {
+    .content-wrap { padding-left: 18rem; transition: padding .3s; }
+    html[data-collapsed] .content-wrap { padding-left: 7rem; }
+    html[data-collapsed] #sidebar { width: 5.25rem; padding-inline: .75rem; }
+    html[data-collapsed] #sidebar .lbl { display: none; }
+    html[data-collapsed] #sidebar a { justify-content: center; padding-inline: 0; }
+    html[data-collapsed] #sidebar > div:first-of-type { justify-content: center; }
+    html[data-collapsed] #collapse-btn { transform: rotate(180deg); }
+}
